@@ -1,0 +1,4 @@
+interface:
+  display_name: "PRDCA Governance"
+  short_description: "PRDCA project governance and stage gates"
+  default_prompt: "Use $prdca-governance to route risk and control this delivery through the PRDCA gates."

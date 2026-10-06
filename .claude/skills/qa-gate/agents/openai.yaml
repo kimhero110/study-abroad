@@ -1,0 +1,4 @@
+interface:
+  display_name: "QA Gate"
+  short_description: "Quality gate testing and release criteria"
+  default_prompt: "Use $qa-gate to validate delivery evidence and decide whether work may enter Act."

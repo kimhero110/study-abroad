@@ -1,0 +1,4 @@
+interface:
+  display_name: "Evolve Project Skills"
+  short_description: "Turn proven workflows into reusable project skills"
+  default_prompt: "Use $evolve-project-skills to assess a repeated workflow and create or improve a governed project skill."

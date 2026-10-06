@@ -1,0 +1,4 @@
+interface:
+  display_name: "Review Board"
+  short_description: "Expert review board checks and rejection rules"
+  default_prompt: "Use $review-board to perform an isolated evidence-based review before implementation."
