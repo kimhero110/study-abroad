@@ -1,0 +1,7 @@
+.env
+__pycache__/
+*.pyc
+data/raw/
+data/catalog.sqlite3
+data/catalog.sqlite3-*
+.venv/
