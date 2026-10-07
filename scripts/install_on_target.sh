@@ -2,7 +2,7 @@
 # 在目标服务器上安装 study-abroad（Debian/Ubuntu 系）
 # 用法: bash install_on_target.sh
 set -e
-cd "$(dirname "$0")"
+cd "$(dirname "$0")/.."   # 项目根目录（脚本在 scripts/ 下）
 
 echo "==> 1/5 检查 Python"
 python3 --version  # 需要 3.11+，低了请先装
