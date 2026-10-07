@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>留学选校定位 · 官方数据版</title>
+<style>
+  :root { --bg:#f6f7f9; --card:#fff; --line:#e3e6ea; --pri:#2563eb; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif; background:var(--bg); color:#1f2328; }
+  .wrap { max-width:880px; margin:0 auto; padding:24px 16px 64px; }
+  h1 { font-size:22px; margin:8px 0 4px; }
+  .sub { color:#6a737d; font-size:13px; margin-bottom:20px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:18px; margin-bottom:16px; }
+  .card h2 { font-size:16px; margin:0 0 12px; }
+  label { display:block; font-size:13px; color:#444; margin:10px 0 4px; }
+  select,input { width:100%; padding:9px 10px; border:1px solid var(--line); border-radius:6px; font-size:14px; }
+  button { background:var(--pri); color:#fff; border:0; border-radius:6px; padding:10px 22px; font-size:15px; cursor:pointer; margin-top:14px; }
+  button:disabled { background:#9db8e8; }
+  .regbtn { background:#fff; color:var(--pri); border:1px solid var(--pri); padding:6px 14px; font-size:13px; margin-top:0; }
+  .regbtn:hover { background:#eef4ff; }
+  .school-item { padding:6px 4px; border-bottom:1px solid #f0f2f5; }
+  .school-item .en { color:#6a737d; font-size:12px; margin-left:6px; }
+  .tier { border-left:4px solid; padding-left:12px; margin:14px 0; }
+  .tier.reach { border-color:#dc2626; } .tier.match { border-color:#d97706; } .tier.safety { border-color:#16a34a; }
+  .tier h3 { font-size:15px; margin:0 0 8px; }
+  .prog { border-top:1px dashed var(--line); padding:10px 0; }
+  .prog .name { font-weight:600; }
+  .recog { font-size:12px; color:#16a34a; margin-left:8px; }
+  .reason { font-size:13px; color:#444; margin:4px 0; }
+  .cite { font-size:12px; margin-top:4px; }
+  .cite a { color:var(--pri); word-break:break-all; }
+  .notice { background:#fff8e6; border:1px solid #f0d78c; border-radius:8px; padding:12px; font-size:13px; color:#6b5300; margin-top:16px; }
+  .insuff { background:#fdecea; border:1px solid #f5b7b1; border-radius:8px; padding:14px; font-size:14px; color:#8a2a20; }
+  details { font-size:12px; margin-top:4px; }
+  summary { cursor:pointer; color:var(--pri); }
+  pre { white-space:pre-wrap; font-size:12px; background:#f0f2f5; padding:8px; border-radius:6px; }
+  .err { color:#b91c1c; font-size:13px; margin-top:8px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>留学选校定位 <span style="font-size:13px;color:#6a737d">港新英一年制硕士 · 全官方数据</span></h1>
+  <div class="sub">每条推荐均可溯源到官方来源 · 数据不足时明确拒绝，绝不编造</div>
+
+  <div class="card">
+    <h2>① 院校认可查询（教育部认可名单）</h2>
+    <label>院校名称（中文或英文）</label>
+    <input id="qname" placeholder="如：新加坡国立大学 / University College London">
+    <button onclick="queryRecog()">查询认可状态</button>
+    <div id="recogResult" style="margin-top:10px;font-size:14px"></div>
+  </div>
+
+  <div class="card">
+    <h2>中国成绩折算标准（各校官方尺子）</h2>
+    <div style="font-size:13px;color:#6a737d;margin-bottom:10px">
+      英国大学用学位等级（2:1 等）写入学要求，你的成绩单是百分制——
+      这是各校官方给出的「中国成绩 → 英国等级」换算标准，每条都有官方原文出处。
+    </div>
+    <details style="margin-bottom:10px">
+      <summary>英国学位等级是什么？（点击展开）</summary>
+      <div style="font-size:13px;padding:8px 0;line-height:1.7">
+        <b>2:1（二等上）</b>：英国本科毕业成绩前 ~35%，<b>硕士申请最常见的门槛</b><br>
+        <b>1st（一等）</b>：前 ~10-15%，最高等级<br>
+        <b>2:2（二等下）</b>：前 ~65%，部分项目接受<br>
+        中国没有对应的官方换算，<b>每所英国大学自己定</b>「中国多少分 = 2:1」——
+        这正是下面各校尺子的价值：中介收费掌握的，主要就是这些分散在各校官网的折算标准。
+      </div>
+    </details>
+    <div id="gpaRules"></div>
+  </div>
+
+  <div class="card">
+    <h2>全部认可院校（按地区浏览）</h2>
+    <div style="display:flex;gap:8px;margin-bottom:10px">
+      <button class="regbtn" onclick="loadSchools('sg')">新加坡（15）</button>
+      <button class="regbtn" onclick="loadSchools('uk')">英国（163）</button>
+      <button class="regbtn" onclick="loadSchools('hk')">香港（采集中）</button>
+    </div>
+    <input id="schoolFilter" placeholder="在结果中筛选…" oninput="filterSchools()" style="margin-bottom:8px">
+    <div id="schoolList" style="max-height:320px;overflow-y:auto;font-size:13px"></div>
+  </div>
+
+  <div class="card">
+    <h2>② 选校定位</h2>
+    <label>本科院校层次</label>
+    <select id="tier">
+      <option value="C9">C9 联盟</option>
+      <option value="985">985（不含 C9）</option>
+      <option value="211" selected>211（不含 985）</option>
+      <option value="shuangyiliu">双一流（不含 985/211）</option>
+      <option value="shuangfei">双非</option>
+      <option value="overseas">海外本科</option>
+    </select>
+    <label>本科院校名称（可选，用于 UCL 自有名单精确匹配）</label>
+    <input id="schoolName" placeholder="如：复旦大学">
+    <label>均分（百分制）</label>
+    <input id="gpa" type="number" min="0" max="100" step="0.1" placeholder="如 85.5">
+    <label>IELTS 总分（未考留空）</label>
+    <input id="ielts" type="number" min="0" max="9" step="0.5" placeholder="如 6.5">
+    <label>IELTS 最低单项（未考留空）</label>
+    <input id="ielts_sub" type="number" min="0" max="9" step="0.5" placeholder="如 6.0">
+    <label>目标方向</label>
+    <select id="field"><option value="cs">计算机/数据科学</option><option value="business">商科</option></select>
+    <button id="matchBtn" onclick="doMatch()">生成选校清单</button>
+    <div id="matchErr" class="err"></div>
+  </div>
+
+  <div id="result"></div>
+</div>
+
+<script>
+let _schools = [];
+const TIER_ZH = {C9:'C9',985:'985',211:'211',shuangyiliu:'双一流',shuangfei:'双非',overseas:'海外本科'};
+async function loadGpaRules(){
+  const r = await fetch('/api/gpa-rules');
+  const d = await r.json();
+  const el = document.getElementById('gpaRules');
+  if(!d.rules.length){ el.innerHTML = '<div style="color:#6a737d">暂无数据</div>'; return; }
+  el.innerHTML = d.rules.map(rule => `
+    <div style="border:1px solid var(--line);border-radius:8px;padding:12px;margin-bottom:10px">
+      <div style="font-weight:600;font-size:15px">${rule.university}
+        <span style="font-size:12px;color:#6a737d;font-weight:400">适用 ${rule.valid_intake||''} 入学 · 核实于 ${(rule.verified_at||'').slice(0,10)}</span></div>
+      <table style="width:100%;font-size:13px;margin:8px 0;border-collapse:collapse">
+        ${rule.tiers.map(t=>`<tr><td style="padding:4px 8px;border-bottom:1px solid #f0f2f5;width:45%">${TIER_ZH[t.tier]||t.tier} 大学毕业</td>
+          <td style="padding:4px 8px;border-bottom:1px solid #f0f2f5"><b>均分 ≥ ${t.min_gpa}%</b></td></tr>`).join('')}
+      </table>
+      ${rule.allowed_tiers?`<div style="font-size:13px;color:#8a5a00;background:#fff8e6;padding:6px 8px;border-radius:6px;margin-bottom:6px">⚠️ 名单限制：仅 ${rule.allowed_tiers.map(t=>TIER_ZH[t]||t).join('/')} 背景可申请，其余背景该校明确不接受</div>`:''}
+      ${rule.preference_note?`<div style="font-size:13px;color:#444;margin-bottom:6px">📌 官方口径：${rule.preference_note}</div>`:''}
+      <div style="font-size:13px;line-height:1.7;margin-bottom:6px">${rule.explanation}</div>
+      <details>
+        <summary>官方原文（逐字引用）</summary>
+        <pre>${rule.excerpt}</pre>
+      </details>
+      <div class="cite" style="margin-top:6px">官方来源：<a href="${rule.source_url}" target="_blank">${rule.source_url}</a></div>
+    </div>`).join('');
+}
+loadGpaRules();
+
+async function loadSchools(region){
+  const r = await fetch('/api/schools?region='+region);
+  const d = await r.json();
+  _schools = d.schools;
+  document.getElementById('schoolFilter').value='';
+  renderSchools();
+}
+function filterSchools(){ renderSchools(); }
+function renderSchools(){
+  const kw = document.getElementById('schoolFilter').value.trim().toLowerCase();
+  const list = kw ? _schools.filter(s=>(s.name_zh+(s.name_en||'')).toLowerCase().includes(kw)) : _schools;
+  document.getElementById('schoolList').innerHTML = list.length
+    ? list.map(s=>`<div class="school-item">✓ ${s.name_zh}<span class="en">${s.name_en||''}</span></div>`).join('')
+    : '<div style="color:#6a737d;padding:12px">该地区数据采集中（香港名单走人工录入，即将补充）</div>';
+}
+
+async function queryRecog(){
+  const name = document.getElementById('qname').value.trim();
+  if(!name) return;
+  const r = await fetch('/api/schools/recognition?name='+encodeURIComponent(name));
+  const d = await r.json();
+  const el = document.getElementById('recogResult');
+  if(d.found){
+    el.innerHTML = `✅ <b>${d.name}</b>（${d.name_en||''}）在教育部认可名单中。
+      <div class="cite">来源：<a href="${d.source_url}" target="_blank">${d.source_url}</a> · 采集于 ${d.fetched_at}</div>`;
+  } else {
+    el.innerHTML = `⚠️ ${d.message}。<div class="cite">官方查询入口：<a href="${d.list_url}" target="_blank">${d.list_url}</a></div>`;
+  }
+}
+
+function tierTitle(t){ return {reach:'🔴 冲刺', match:'🟠 匹配', safety:'🟢 保底'}[t]; }
+
+async function doMatch(){
+  const btn = document.getElementById('matchBtn');
+  const err = document.getElementById('matchErr'); err.textContent='';
+  const gpa = document.getElementById('gpa').value;
+  if(!gpa){ err.textContent='请填写均分'; return; }
+  const body = {
+    undergrad_tier: document.getElementById('tier').value,
+    undergrad_school: document.getElementById('schoolName').value.trim() || null,
+    gpa: parseFloat(gpa),
+    ielts: document.getElementById('ielts').value ? parseFloat(document.getElementById('ielts').value) : null,
+    ielts_min_sub: document.getElementById('ielts_sub').value ? parseFloat(document.getElementById('ielts_sub').value) : null,
+    target_field: document.getElementById('field').value
+  };
+  btn.disabled = true; btn.textContent = '匹配中…';
+  try{
+    const r = await fetch('/api/match',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    const d = await r.json();
+    render(d);
+  }catch(e){ err.textContent = '请求失败：'+e; }
+  finally{ btn.disabled=false; btn.textContent='生成选校清单'; }
+}
+
+function render(d){
+  const el = document.getElementById('result');
+  if(d.data_sufficiency==='insufficient'){
+    el.innerHTML = `<div class="insuff">📋 ${d.insufficient_reason}</div><div class="notice">${d.notice}</div>`;
+    return;
+  }
+  let html = '';
+  for(const t of ['reach','match','safety']){
+    const list = d.tiers[t]||[];
+    if(!list.length) continue;
+    html += `<div class="tier ${t}"><h3>${tierTitle(t)}（${list.length}）</h3>`;
+    for(const p of list){
+      const cite = p.citations[0];
+      const excerpts = cite.excerpts||{};
+      html += `<div class="prog">
+        <div><span class="name">${p.university} · ${p.program}</span>
+          ${p.recognized?'<span class="recog">✓ 教育部认可</span>':''}</div>
+        ${p.reasons.map(r=>`<div class="reason">· ${r}</div>`).join('')}
+        <div class="cite">官方来源：<a href="${cite.url}" target="_blank">${cite.url}</a></div>
+        ${Object.keys(excerpts).length?`<details><summary>查看官方原文片段</summary><pre>${JSON.stringify(excerpts,null,2)}</pre></details>`:''}
+      </div>`;
+    }
+    html += '</div>';
+  }
+  html += `<div class="notice">${d.notice}</div>`;
+  el.innerHTML = html || '<div class="insuff">无符合条件的项目</div>';
+}
+</script>
+</body>
+</html>
