@@ -1,0 +1,21 @@
+{
+  "critical_flags": [],
+  "external_review_allowed": false,
+  "reassessed_at": "2026-10-02T14:00:00Z",
+  "reassessment_reason": "CR-001 后重估：公网隧道暴露（验证期）+ L0 监管层加入 + 案例层移出",
+  "dimensions": {
+    "external_exposure": 2,
+    "impact": 2,
+    "irreversibility": 0,
+    "low_testability": 1,
+    "novelty": 2,
+    "semantic_ambiguity": 2
+  },
+  "review_focus": [
+    "architecture",
+    "data",
+    "ai-rag",
+    "qa",
+    "compliance"
+  ]
+}

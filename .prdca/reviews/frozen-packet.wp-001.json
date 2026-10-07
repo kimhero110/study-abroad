@@ -1,0 +1,18 @@
+{
+  "algorithm": "sha256",
+  "path_base": "manifest_directory",
+  "included": [
+    {
+      "path": "prd.wp-001.md",
+      "sha256": "fc5195a1b1d39deea3dad9bb957ebacead8b9ba67d9e40514f6a11891aab73d7"
+    },
+    {
+      "path": "technical-plan.wp-001.md",
+      "sha256": "96dec262ec63a25e3d1cf4eec59b278197f3f07d603f07ad7b14fc2355fbf99e"
+    },
+    {
+      "path": "thresholds.wp-001.json",
+      "sha256": "2129668967fa2a9533ec77921e74f761509e6ed2ce871b4f2a9183ed49d503cc"
+    }
+  ]
+}

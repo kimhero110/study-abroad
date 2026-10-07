@@ -1,0 +1,115 @@
+{
+  "declaration_id": "THR-WP-001",
+  "work_package_id": "WP-001",
+  "declared_at": "2026-10-02T15:00:00Z",
+  "thresholds": [
+    {
+      "id": "THR-DATA-0",
+      "name": "L0 教育部认可名单覆盖率",
+      "metric": "recognition_coverage_rate",
+      "comparator": ">=",
+      "target": 1.0,
+      "unit": "ratio",
+      "measurement_method": "港/新/英认可院校覆盖核对，采用独立分母防同源自证：(1) 采集器记录官方名单分页数/条目数，入库数与官方页面声明总数一致；(2) 人工对每地区随机抽 1 页名单与 recognized_schools 逐条比对；(3) L1 项目库每个 program 的 school_id 均可关联到认可记录。三者全过 = 1.0。reports/recognition_coverage.json。 降级规则（冻结）：若官网无分页/总数声明，第①式不可执行时以第②式抽页 + 第③式关联为准，并在 reports/recognition_coverage.json 记录降级原因。"
+    },
+    {
+      "id": "THR-DATA-1",
+      "name": "项目库规模与字段完整率",
+      "metric": "programs_count_and_field_completeness",
+      "comparator": ">=",
+      "target": 0.95,
+      "unit": "ratio",
+      "measurement_method": "programs 表行数 ≥60，且关键字段（gpa_requirements/ielts_req 或 toefl_req/tuition_amount/deadlines/source_url/snapshot_ref）非空率 ≥0.95；脚本输出 reports/data_quality.json。"
+    },
+    {
+      "id": "THR-EXTRACT",
+      "name": "LLM 抽取准确率（人工抽样，字段级）",
+      "metric": "extract_field_accuracy",
+      "comparator": ">=",
+      "target": 0.95,
+      "unit": "ratio",
+      "measurement_method": "字段级一致率 = 一致字段数/总比对字段数。programs 随机抽 30 条（按学校适配器分层，每适配器 ≥3 条），比对 gpa_requirements/ielts_req/tuition/deadlines 与 source_excerpts 原文；单字段与原文一致计 1 否则计 0；一致率 ≥0.95 通过，错误数上限 = floor(总字段数×0.05)。记录 reports/extract_audit.md。"
+    },
+    {
+      "id": "THR-E2E",
+      "name": "核心端到端工作流成功率",
+      "metric": "core_e2e_success_rate",
+      "comparator": ">=",
+      "target": 1.0,
+      "unit": "ratio",
+      "measurement_method": "冻结用例集 E-001~E-011 全部执行：正常用例输出三档合规清单且分档与「分档规则」逐步手算一致，拒绝用例输出 insufficient 且零推荐，E-011 认可查询与名单一致；成功数/总数 = 1.0；reports/e2e.json。"
+    },
+    {
+      "id": "THR-EXPERT",
+      "name": "专家盲评合格率（推荐质量判别测试）",
+      "metric": "expert_blind_review_pass_rate",
+      "comparator": ">=",
+      "target": 0.7,
+      "unit": "ratio",
+      "measurement_method": "E-001~E-010 产出交非执行角色盲评，按预声明 rubric（档位合理性/依据相关性/风险提示完整性，各 1-5 分，单项 ≥3 且总分 ≥10 为合格）逐用例判定；合格率 = 合格用例数/总用例数 ≥0.70。与 PRD A-003 证伪条件对齐。记录 reports/expert_blind_review.md。"
+    },
+    {
+      "id": "THR-CITE",
+      "name": "推荐引用覆盖率与可访问性",
+      "metric": "citation_coverage_rate",
+      "comparator": ">=",
+      "target": 1.0,
+      "unit": "ratio",
+      "measurement_method": "E2E 产出每条推荐 citations 非空（覆盖率 = 1.0）；抽样 30 条引用：URL 可访问率 ≥0.90，URL 不可达者 snapshot_ref 快照可用率 = 1.0；引用内容与推荐依据人工核验一致率 ≥0.95。reports/citation_check.json。"
+    },
+    {
+      "id": "THR-REJECT",
+      "name": "数据不足正确拒绝率",
+      "metric": "correct_reject_rate",
+      "comparator": ">=",
+      "target": 1.0,
+      "unit": "ratio",
+      "measurement_method": "E-003/E-004 类用例输出 data_sufficiency=insufficient 且三档均为空，编造推荐数 = 0；reports/e2e.json。"
+    },
+    {
+      "id": "THR-IDEM",
+      "name": "采集幂等增量",
+      "metric": "idempotency_row_delta",
+      "comparator": "<=",
+      "target": 0,
+      "unit": "count",
+      "measurement_method": "同一数据源连续运行两次采集，recognized_schools/programs 行数增量 = 0（自然键 upsert 原位更新）；reports/idempotency.json。"
+    },
+    {
+      "id": "THR-SEED",
+      "name": "种子清单对账覆盖率",
+      "metric": "seed_reconciliation_rate",
+      "comparator": ">=",
+      "target": 1.0,
+      "unit": "ratio",
+      "measurement_method": "期望 60 个项目与 programs 表 + quarantine 表对账：每个种子项目必须有归属（入库或 quarantine 带原因码），无静默缺失；且单校 quarantine 率 ≤0.50。脚本输出 reports/seed_reconciliation.json，差异清单非空即失败。"
+    },
+    {
+      "id": "THR-NOLLM",
+      "name": "匹配引擎零 LLM 调用",
+      "metric": "matching_llm_call_count",
+      "comparator": "<=",
+      "target": 0,
+      "unit": "count",
+      "measurement_method": "静态审计 matching/ 目录，冻结断言模式清单：(1) 无 import 包含 openai|anthropic|ollama|deepseek|requests.*chat|http.*11434|/chat/completions；(2) 无环境变量引用 LLM_|DEEPSEEK|OLLAMA；(3) matching/ 依赖白名单仅含 storage/ 与标准库。三式全部零命中；reports/audit.json。"
+    },
+    {
+      "id": "THR-LLMCONF",
+      "name": "LLM 客户端供应商可配置性",
+      "metric": "llm_provider_switch_smoke",
+      "comparator": ">=",
+      "target": 1.0,
+      "unit": "ratio",
+      "measurement_method": "两组不同 base_url/api_key/model 环境变量配置（如 DeepSeek 与本地 Ollama OpenAI 兼容端点）分别冒烟同一抽取任务成功；两次运行之间执行 git diff --exit-code 为空（仅环境变量不同，零代码改动）；reports/llm_smoke.json。"
+    },
+    {
+      "id": "THR-DEFECT",
+      "name": "开放 P0/P1 缺陷数",
+      "metric": "open_p0_p1_count",
+      "comparator": "<=",
+      "target": 0,
+      "unit": "count",
+      "measurement_method": "C 阶段缺陷清单中开放 P0/P1 数量 = 0。"
+    }
+  ]
+}

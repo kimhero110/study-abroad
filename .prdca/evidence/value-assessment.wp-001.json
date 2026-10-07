@@ -1,0 +1,58 @@
+{
+  "project_thesis_id": "THESIS-SA-001",
+  "macro_milestone_id": "M-SA-MVP",
+  "work_package_id": "WP-001",
+  "user_capability": "计划申请港新英一年制硕士的学生/家长，输入自己的背景（本科院校、均分、语言成绩、目标专业方向）后，获得一份每个推荐都带官方来源或真实录取案例引用的冲刺/匹配/保底三档选校清单；在数据不足时得到明确的「数据不足」说明而非编造的推荐。",
+  "value_hypothesis": {
+    "beneficiary": "计划申请香港/新加坡/英国一年制授课型硕士的中国学生及其家长",
+    "problem": "选校定位信息被留学中介垄断（服务费 1.5-3 万元），公开信息散落在各校官网、论坛、社交媒体，零散、非结构化、难以交叉验证；现有免费工具缺少可溯源依据，用户无法判断推荐可信度。",
+    "expected_change": "用户无需付费即可在 10 分钟内获得带可点击原始来源的选校梯度清单，可自行核验每条推荐的依据，将「是否找中介」的决策建立在透明信息之上。"
+  },
+  "success_metrics": [
+    {
+      "id": "VAL-001",
+      "name": "核心工作流端到端成功率",
+      "baseline": 0,
+      "target": 1.0,
+      "measurement_method": "对预声明的代表性背景用例集（不同院校层次/均分档/语言档组合），执行「输入背景→生成选校清单」全流程，统计成功输出合规清单的比例。",
+      "evidence_level": "workflow"
+    },
+    {
+      "id": "VAL-002",
+      "name": "推荐引用可溯源率",
+      "baseline": 0,
+      "target": 1.0,
+      "measurement_method": "对端到端产出的每条推荐，检查是否附带至少一个可解析到原始文档（官网要求页或录取案例）的引用；无引用的推荐计为失败。",
+      "evidence_level": "workflow"
+    },
+    {
+      "id": "VAL-003",
+      "name": "数据不足场景的正确拒绝率",
+      "baseline": 0,
+      "target": 1.0,
+      "measurement_method": "对预声明的「背景明显不足」与「目标方向无数据」用例集，断言系统输出明确的不足说明且不产生任何推荐条目。",
+      "evidence_level": "workflow"
+    },
+    {
+      "id": "VAL-004",
+      "name": "结构化数据抽取准确率",
+      "baseline": 0,
+      "target": 0.95,
+      "measurement_method": "从解析产出的项目库中随机抽样 30 个项目的硬性字段（均分要求/语言要求/学费/截止日期），与原始来源逐字段人工比对，统计一致比例。",
+      "evidence_level": "user_task"
+    }
+  ],
+  "active_work_packages": 2,
+  "wip_limit": 2,
+  "blocked_decisions": [],
+  "direction_review": {
+    "cycles_since_review": 1,
+    "interval": 4,
+    "status": "current"
+  },
+  "diminishing_returns": {
+    "consecutive_cycles_without_user_gain": 0,
+    "stop_after": 2,
+    "disposition": "not_due"
+  }
+}

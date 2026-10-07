@@ -1,0 +1,14 @@
+{
+  "external_ai_mandatory": false,
+  "external_review_allowed": false,
+  "fallback": "human_or_local_independent_review",
+  "fallback_required": true,
+  "missing_slots": 1,
+  "required_slots": 1,
+  "selected": [],
+  "uncovered_roles": [
+    "architecture_reviewer",
+    "data_evidence_reviewer",
+    "test_independence_reviewer"
+  ]
+}

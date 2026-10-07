@@ -1,0 +1,145 @@
+{
+  "schema_version": "1.0",
+  "work_packages": {
+    "WP-001": {
+      "stage": "D",
+      "history": [
+        {
+          "from": null,
+          "to": "P",
+          "transition": "forward",
+          "at": "2026-10-02T08:26:25+00:00",
+          "evidence": [
+            {
+              "path": "/opt/coder/projects/study-abroad/.prdca/reports/value-check.wp-001.json",
+              "sha256": "2135316a24850d6216602c5637f36006007c0b70797471281c16aea2236272ed",
+              "decision": "pass"
+            }
+          ]
+        },
+        {
+          "from": "P",
+          "to": "R",
+          "transition": "forward",
+          "at": "2026-10-02T08:34:48+00:00",
+          "evidence": [
+            {
+              "path": "/opt/coder/projects/study-abroad/.prdca/reports/plan-check.wp-001.json",
+              "sha256": "eb770f4861ec89c77dc61f64840c00261a00052e8be62566e07f779d0e84e75e",
+              "decision": "pass"
+            },
+            {
+              "path": "/opt/coder/projects/study-abroad/.prdca/reports/decomposition-check.wp-001.json",
+              "sha256": "afe3298953d3518d5b9e193865b616788ae7c8fe1a45d647a8d73266b5a9bb60",
+              "decision": "pass"
+            }
+          ]
+        },
+        {
+          "from": "R",
+          "to": "P",
+          "transition": "regression",
+          "at": "2026-10-02T08:45:13+00:00",
+          "evidence": [],
+          "reason": "R 仲裁 block：5 项 P1（院校分档口径未冻结/要求模型表达力不足/推荐正确性无判别测试/案例抽取无质量门/分档规则未规格化）+7 项 P2 跟踪修订。修订计划包后复审。"
+        },
+        {
+          "from": "P",
+          "to": "R",
+          "transition": "forward",
+          "at": "2026-10-02T08:56:30+00:00",
+          "evidence": [
+            {
+              "path": "/opt/coder/projects/study-abroad/.prdca/reports/plan-check.wp-001.json",
+              "sha256": "eb770f4861ec89c77dc61f64840c00261a00052e8be62566e07f779d0e84e75e",
+              "decision": "pass"
+            },
+            {
+              "path": "/opt/coder/projects/study-abroad/.prdca/reports/decomposition-check.wp-001.json",
+              "sha256": "afe3298953d3518d5b9e193865b616788ae7c8fe1a45d647a8d73266b5a9bb60",
+              "decision": "pass"
+            }
+          ]
+        },
+        {
+          "from": "R",
+          "to": "D",
+          "transition": "forward",
+          "at": "2026-10-02T09:01:59+00:00",
+          "evidence": [
+            {
+              "path": "/opt/coder/projects/study-abroad/.prdca/reports/arbitration.wp-001.json",
+              "sha256": "0731b1bfe64deede0596a1b053f8bac37eb2234fcb4654b7a96bc41784d1b746",
+              "decision": "pass"
+            }
+          ]
+        },
+        {
+          "from": "D",
+          "to": "P",
+          "transition": "regression",
+          "at": "2026-10-02T13:23:02+00:00",
+          "evidence": [],
+          "reason": "CR-001 major 变更：数据源分层（+L0 监管认可名单、-L3 案例层移至 WP-002）+ LLM OpenAI 兼容化 + Cloudflare Tunnel 公网验证。change-check 要求回 P 并重新过 R。"
+        },
+        {
+          "from": "P",
+          "to": "R",
+          "transition": "forward",
+          "at": "2026-10-02T13:31:09+00:00",
+          "evidence": [
+            {
+              "path": "/opt/coder/projects/study-abroad/.prdca/reports/plan-check.wp-001.json",
+              "sha256": "eb770f4861ec89c77dc61f64840c00261a00052e8be62566e07f779d0e84e75e",
+              "decision": "pass"
+            },
+            {
+              "path": "/opt/coder/projects/study-abroad/.prdca/reports/decomposition-check.wp-001.json",
+              "sha256": "afe3298953d3518d5b9e193865b616788ae7c8fe1a45d647a8d73266b5a9bb60",
+              "decision": "pass"
+            }
+          ]
+        },
+        {
+          "from": "R",
+          "to": "P",
+          "transition": "regression",
+          "at": "2026-10-02T13:36:48+00:00",
+          "evidence": [],
+          "reason": "R 第三轮复审 conditional_pass：2 项 P1（CR-FND-01 非认可校否定应答语义悬空；CR-FND-02 Risk Route 与风险评估证据矛盾）+2 P2+3 P3，全部 P 内修订。"
+        },
+        {
+          "from": "P",
+          "to": "R",
+          "transition": "forward",
+          "at": "2026-10-02T13:44:58+00:00",
+          "evidence": [
+            {
+              "path": "/opt/coder/projects/study-abroad/.prdca/reports/plan-check.wp-001.json",
+              "sha256": "eb770f4861ec89c77dc61f64840c00261a00052e8be62566e07f779d0e84e75e",
+              "decision": "pass"
+            },
+            {
+              "path": "/opt/coder/projects/study-abroad/.prdca/reports/decomposition-check.wp-001.json",
+              "sha256": "afe3298953d3518d5b9e193865b616788ae7c8fe1a45d647a8d73266b5a9bb60",
+              "decision": "pass"
+            }
+          ]
+        },
+        {
+          "from": "R",
+          "to": "D",
+          "transition": "forward",
+          "at": "2026-10-02T13:51:09+00:00",
+          "evidence": [
+            {
+              "path": "/opt/coder/projects/study-abroad/.prdca/reports/arbitration.wp-001.json",
+              "sha256": "0731b1bfe64deede0596a1b053f8bac37eb2234fcb4654b7a96bc41784d1b746",
+              "decision": "pass"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "schema_version": "1.0",
+  "id": "CR-001",
+  "title": "WP-001 范围与部署调整：数据源分层（L0 监管层加入、L3 案例层移出至 WP-002）+ LLM 客户端 OpenAI 兼容化 + Cloudflare Tunnel 公网验证",
+  "requester_id": "product-owner",
+  "request_date": "2026-10-02",
+  "current_stage": "D",
+  "declared_level": "major",
+  "reason": "产品 owner 决策：(1) 数据策略改为权威底座先行——L0 教育部认可名单为家长底线需求，L3 案例层噪音大且 A-002 风险在关键路径上，移出后 MVP 全部推荐 100% 官方来源；(2) LLM 客户端需供应商可替换（OpenAI 兼容接口）；(3) 验证期公网访问用 Cloudflare Tunnel，零重写。",
+  "affected_requirement_ids": [
+    "REQ-002",
+    "REQ-003"
+  ],
+  "affected_areas": [
+    "scope",
+    "data",
+    "architecture",
+    "schedule"
+  ],
+  "risk_if_accepted": "推荐精度暂时失去案例纠偏（Step 3），由「案例数据建设中」标注与专家盲评兜底；WP-002 需重新立项验证案例可采性。",
+  "risk_if_rejected": "A-002（案例可采 ≥500 条）未验证即进入关键路径；L0 监管认可这一最高信任价值缺失；LLM 供应商锁定。",
+  "required_approver_roles": [
+    "product_owner",
+    "tech_lead",
+    "qa_lead"
+  ],
+  "approvals": [
+    {
+      "role": "product_owner",
+      "identity": "user-xu512",
+      "decision": "approved"
+    }
+  ],
+  "final_decision": "pending",
+  "return_to_p": true,
+  "r_gate": {
+    "status": "pending",
+    "review_id": null,
+    "reviewed_change_id": null,
+    "decision_at": null
+  },
+  "requested_at": "2026-10-02T12:00:00Z"
+}

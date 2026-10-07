@@ -1,0 +1,119 @@
+{
+  "framework": {
+    "name": "prdca-framework",
+    "version": "0.6.0",
+    "policy_version": "2.0"
+  },
+  "accountable_ai": "primary-ai (kimi-k3)",
+  "approvals": [],
+  "artifacts": [],
+  "assumptions": [
+    {
+      "id": "A-001",
+      "statement": "港新英项目硬性要求（均分/list/语言）在官网公开可采",
+      "evidence": "人工抽查 HKU/NUS/UCL 项目页均可见（P 阶段抽样）"
+    },
+    {
+      "id": "A-002",
+      "statement": "公开渠道可采到 ≥500 条结构化录取案例",
+      "evidence": "指南者/一亩三分地/小红书案例量观察"
+    },
+    {
+      "id": "A-003",
+      "statement": "规则匹配 + 案例参考即可给出可用选校梯度",
+      "evidence": "中介选校逻辑本质是硬约束过滤 + 案例类比"
+    },
+    {
+      "id": "A-004",
+      "statement": "本地 SQLite + Qdrant 足够 MVP 规模",
+      "evidence": "report-rag 同栈已验证"
+    }
+  ],
+  "changes": [],
+  "decisions": [
+    {
+      "id": "DEC-001",
+      "statement": "规则优先、LLM 仅用于抽取：匹配引擎零 LLM 调用",
+      "alternatives": ["LLM 直接生成推荐"],
+      "evidence": "幻觉责任风险；THR-NOLLM 静态审计约束"
+    },
+    {
+      "id": "DEC-002",
+      "statement": "无引用不推荐：服务端丢弃空 citations 的推荐",
+      "alternatives": ["允许无引用推荐并标注"],
+      "evidence": "信任层是产品核心差异（PRD 业务价值节）"
+    },
+    {
+      "id": "DEC-003",
+      "statement": "本地 SQLite(WAL) + Qdrant + Ollama bge-m3 技术栈",
+      "alternatives": ["PostgreSQL", "云端向量库"],
+      "evidence": "report-rag 已验证同栈；MVP 单机"
+    }
+  ],
+  "delivery_id": "WP-001",
+  "dissent": [],
+  "findings": [],
+  "objectives": [
+    {
+      "id": "OBJ-001",
+      "statement": "交付本地可运行的「背景输入 → 三档选校清单（全引用溯源）」全流程"
+    },
+    {
+      "id": "OBJ-002",
+      "statement": "数据不足时正确拒绝，零编造推荐"
+    }
+  ],
+  "owner": "Product Owner (user)",
+  "requirements": [
+    {"id": "REQ-001", "priority": "Must", "statement": "项目库 ≥60 个项目，关键字段完整率 ≥95%", "acceptance": "reports/data_quality.json 达标（THR-DATA-1）"},
+    {"id": "REQ-002", "priority": "Must", "statement": "案例库 ≥500 条，每条带来源", "acceptance": "reports/data_quality.json 达标（THR-DATA-2）"},
+    {"id": "REQ-003", "priority": "Must", "statement": "背景输入 → 三档梯度输出", "acceptance": "E2E 用例集通过率 100%（THR-E2E）"},
+    {"id": "REQ-004", "priority": "Must", "statement": "每条推荐 ≥1 可溯源引用", "acceptance": "引用覆盖率 100%（THR-CITE）"},
+    {"id": "REQ-005", "priority": "Must", "statement": "数据不足明确拒绝，零编造", "acceptance": "拒绝用例集通过率 100%（THR-REJECT）"},
+    {"id": "REQ-006", "priority": "Must", "statement": "本地 Web UI 完成 S-001 流程", "acceptance": "reports/manual_e2e.md 记录"},
+    {"id": "REQ-007", "priority": "Must", "statement": "采集幂等", "acceptance": "双跑行数增量 0（THR-IDEM）"},
+    {"id": "REQ-008", "priority": "Must", "statement": "匹配引擎零 LLM 调用", "acceptance": "静态审计（THR-NOLLM）"}
+  ],
+  "reviews": [],
+  "risk_assessment": {
+    "critical_flags": [],
+    "external_review_allowed": false,
+    "dimensions": {
+      "external_exposure": 2,
+      "impact": 2,
+      "irreversibility": 0,
+      "low_testability": 1,
+      "novelty": 2,
+      "semantic_ambiguity": 2
+    },
+    "review_focus": ["architecture", "data", "ai-rag", "qa", "compliance"]
+  },
+  "risks": [
+    {"id": "RSK-001", "statement": "官网反爬/结构变更导致采集中断", "mitigation": "种子 URL 人工维护 + 失败隔离不阻塞 + 重试"},
+    {"id": "RSK-002", "statement": "案例来源停止更新", "mitigation": "≥3 源冗余 + 本地快照"},
+    {"id": "RSK-003", "statement": "LLM 抽取错误污染数据", "mitigation": "规则校验 quarantine + 人工抽样门 ≥95%"},
+    {"id": "RSK-004", "statement": "推荐错误误导重大决策", "mitigation": "全链路引用 + 免责提示 + 拒绝机制"},
+    {"id": "RSK-005", "statement": "抓取合规风险", "mitigation": "仅公开页面 + 限速 ≥1s + 遵守 robots + 非商业使用"}
+  ],
+  "rollback": {
+    "procedure": "MVP 无外部部署；回滚 = 删除本地项目目录与数据目录，无用户影响。",
+    "trigger": "C 门阻断缺陷无法修复或 A-001/A-002 证伪。"
+  },
+  "skill_candidates": [],
+  "stage": "P",
+  "task_contracts": [
+    {
+      "id": "TASK-001",
+      "task_type": "user_visible_operation",
+      "authoritative_sources": ["programs 表", "cases 表"],
+      "allowed_reasoning": "rule_based_matching_only",
+      "expected_outcomes": ["tiered_recommendations_with_citations", "insufficient_data_notice"],
+      "entrypoint_tests": ["POST /api/match"],
+      "semantic_variants": ["背景字段组合变化"],
+      "presentation_contract": ["three_tiers", "citations_non_empty", "disclaimer_notice"],
+      "refusal_boundary": "数据不足或背景明显不匹配时必须输出 insufficient，不得生成推荐。"
+    }
+  ],
+  "tests": [],
+  "title": "留学信息服务平台 MVP — 港新英一年制硕士 AI 选校定位"
+}

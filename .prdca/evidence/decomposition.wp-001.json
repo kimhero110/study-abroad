@@ -1,0 +1,233 @@
+{
+  "decomposition_id": "DEC-WP-001",
+  "work_package_id": "WP-001",
+  "declared_at": "2026-10-02T14:30:00Z",
+  "must_requirements": [
+    "REQ-001",
+    "REQ-002",
+    "REQ-003",
+    "REQ-004",
+    "REQ-005",
+    "REQ-006",
+    "REQ-007",
+    "REQ-008",
+    "REQ-009"
+  ],
+  "nodes": [
+    {
+      "id": "N-ROOT",
+      "name": "留学选校定位 MVP（权威底座版）",
+      "parent": null
+    },
+    {
+      "id": "N-DATA",
+      "name": "存储层：SQLite schema（recognized_schools/programs/collect_state/quarantine）+ 自然键 upsert + stale 标记",
+      "parent": "N-ROOT",
+      "covered": true,
+      "requirement_ids": [
+        "REQ-007"
+      ],
+      "acceptance": {
+        "dominant": [
+          {
+            "item": "schema-created",
+            "description": "四表创建成功，外键 programs.school_id → recognized_schools 生效。"
+          },
+          {
+            "item": "natural-key-upsert",
+            "description": "programs 以 (university,name,intake_year) upsert；content_hash 变化原位更新，重复运行零新增行。"
+          }
+        ]
+      }
+    },
+    {
+      "id": "N-L0",
+      "name": "L0 监管层：教育部认可名单采集（港/新/英）",
+      "parent": "N-ROOT",
+      "depends_on": [
+        "N-DATA"
+      ],
+      "requirement_ids": [
+        "REQ-002"
+      ],
+      "acceptance": {
+        "dominant": [
+          {
+            "item": "recognition-coverage",
+            "description": "港/新/英认可院校全覆盖入库，与官方名单逐条核对一致。"
+          },
+          {
+            "item": "recognition-linkage",
+            "description": "programs 每条记录可关联到认可记录，推荐响应携带 recognized 字段。"
+          },
+          {
+            "item": "positive-list-only",
+            "description": "recognized_schools 只存正面记录；未命中查询按冻结契约应答「未收录≠不认可」，系统无否定陈述。"
+          }
+        ],
+        "general": [
+          {
+            "item": "recognition-coverage-rate",
+            "comparator": ">=",
+            "target": 1.0,
+            "unit": "ratio",
+            "measurement_method": "与官方名单逐条比对脚本"
+          }
+        ]
+      }
+    },
+    {
+      "id": "N-COLLECT",
+      "name": "L1 项目采集：种子清单 + 逐校适配器 → ≥60 项目",
+      "parent": "N-ROOT",
+      "depends_on": [
+        "N-DATA"
+      ],
+      "requirement_ids": [
+        "REQ-001"
+      ],
+      "acceptance": {
+        "dominant": [
+          {
+            "item": "programs-volume",
+            "description": "programs ≥60，覆盖港三/新二/英国目标校与商科、CS 两个方向。"
+          },
+          {
+            "item": "seed-reconciliation",
+            "description": "60/60 种子项目有归属（入库或 quarantine 带原因码），无静默缺失。"
+          }
+        ],
+        "general": [
+          {
+            "item": "field-completeness",
+            "comparator": ">=",
+            "target": 0.95,
+            "unit": "ratio",
+            "measurement_method": "关键字段非空率统计脚本"
+          }
+        ]
+      }
+    },
+    {
+      "id": "N-EXTRACT",
+      "name": "抽取管线：OpenAI 兼容 LLM 客户端 + JSON Schema 约束 + 规则校验 + quarantine",
+      "parent": "N-ROOT",
+      "depends_on": [
+        "N-COLLECT",
+        "N-L0"
+      ],
+      "requirement_ids": [
+        "REQ-001",
+        "REQ-009"
+      ],
+      "acceptance": {
+        "dominant": [
+          {
+            "item": "schema-constrained",
+            "description": "LLM 输出受 JSON Schema 约束，解析失败重试或入 quarantine。"
+          },
+          {
+            "item": "range-validation",
+            "description": "均分/语言/日期/学费越界一律入 quarantine，不入库。"
+          },
+          {
+            "item": "provider-configurable",
+            "description": "两组供应商端点配置冒烟成功，切换零代码改动。"
+          }
+        ],
+        "general": [
+          {
+            "item": "extract-accuracy",
+            "comparator": ">=",
+            "target": 0.95,
+            "unit": "ratio",
+            "measurement_method": "programs 30 样本字段级人工比对，按适配器分层（THR-EXTRACT）"
+          }
+        ]
+      }
+    },
+    {
+      "id": "N-MATCH",
+      "name": "匹配引擎：硬过滤 + margin 分档（纯规则，冻结规则）",
+      "parent": "N-ROOT",
+      "depends_on": [
+        "N-EXTRACT"
+      ],
+      "requirement_ids": [
+        "REQ-003",
+        "REQ-005",
+        "REQ-008"
+      ],
+      "acceptance": {
+        "dominant": [
+          {
+            "item": "tiered-output",
+            "description": "正常输入输出冲刺/匹配/保底各 ≥3 推荐，分档与冻结规则手算一致。"
+          },
+          {
+            "item": "correct-reject",
+            "description": "数据不足输入输出 insufficient 且零推荐。"
+          },
+          {
+            "item": "no-llm-in-matching",
+            "description": "matching/ 无 LLM 客户端调用（冻结三式静态审计零命中）。"
+          },
+          {
+            "item": "deterministic-tiering",
+            "description": "E-001~E-010 分档与规则手算一致；专家盲评合格率 ≥70%（THR-EXPERT）。"
+          }
+        ]
+      }
+    },
+    {
+      "id": "N-SERVE",
+      "name": "服务层：FastAPI + 单页 UI + 引用强制 + 认可查询 + Cloudflare Tunnel",
+      "parent": "N-ROOT",
+      "depends_on": [
+        "N-MATCH"
+      ],
+      "requirement_ids": [
+        "REQ-004",
+        "REQ-006",
+        "REQ-010"
+      ],
+      "acceptance": {
+        "dominant": [
+          {
+            "item": "citation-enforced",
+            "description": "服务端丢弃任何空 citations 的推荐并记录。"
+          },
+          {
+            "item": "snapshot-fallback",
+            "description": "引用 URL 不可达时 UI 回落展示本地快照（snapshot_ref）。"
+          },
+          {
+            "item": "recognition-query",
+            "description": "/api/schools/recognition 命中与官方名单一致；未命中返回 found=false + 名单检索链接，无否定陈述。"
+          },
+          {
+            "item": "ui-e2e",
+            "description": "本地启动后按步骤化清单完成 S-000/S-001 全流程，非执行角色签字（含 notice 可见断言）。"
+          },
+          {
+            "item": "tunnel-access",
+            "description": "cloudflared 隧道公网 HTTPS 完成 S-001；隧道关闭后本地功能不受影响。"
+          },
+          {
+            "item": "tunnel-hardening",
+            "description": "隧道模式禁用 /docs、分享 token、30 次/分钟/IP 限流（TST-010 检查项）。"
+          }
+        ],
+        "general": [
+          {
+            "item": "citation-coverage",
+            "comparator": ">=",
+            "target": 1.0,
+            "unit": "ratio",
+            "measurement_method": "E2E 产出引用覆盖率断言"
+          }
+        ]
+      }
+    }
+  ]
+}
