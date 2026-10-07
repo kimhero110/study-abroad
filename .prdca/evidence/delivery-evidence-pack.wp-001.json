@@ -4,77 +4,90 @@
     "version": "0.6.0",
     "policy_version": "2.0"
   },
-  "accountable_ai": "primary-ai (kimi-k3)",
-  "approvals": [],
-  "artifacts": [],
-  "assumptions": [
-    {
-      "id": "A-001",
-      "statement": "港新英项目硬性要求（均分/list/语言）在官网公开可采",
-      "evidence": "人工抽查 HKU/NUS/UCL 项目页均可见（P 阶段抽样）"
-    },
-    {
-      "id": "A-002",
-      "statement": "公开渠道可采到 ≥500 条结构化录取案例",
-      "evidence": "指南者/一亩三分地/小红书案例量观察"
-    },
-    {
-      "id": "A-003",
-      "statement": "规则匹配 + 案例参考即可给出可用选校梯度",
-      "evidence": "中介选校逻辑本质是硬约束过滤 + 案例类比"
-    },
-    {
-      "id": "A-004",
-      "statement": "本地 SQLite + Qdrant 足够 MVP 规模",
-      "evidence": "report-rag 同栈已验证"
-    }
-  ],
-  "changes": [],
-  "decisions": [
-    {
-      "id": "DEC-001",
-      "statement": "规则优先、LLM 仅用于抽取：匹配引擎零 LLM 调用",
-      "alternatives": ["LLM 直接生成推荐"],
-      "evidence": "幻觉责任风险；THR-NOLLM 静态审计约束"
-    },
-    {
-      "id": "DEC-002",
-      "statement": "无引用不推荐：服务端丢弃空 citations 的推荐",
-      "alternatives": ["允许无引用推荐并标注"],
-      "evidence": "信任层是产品核心差异（PRD 业务价值节）"
-    },
-    {
-      "id": "DEC-003",
-      "statement": "本地 SQLite(WAL) + Qdrant + Ollama bge-m3 技术栈",
-      "alternatives": ["PostgreSQL", "云端向量库"],
-      "evidence": "report-rag 已验证同栈；MVP 单机"
-    }
-  ],
   "delivery_id": "WP-001",
-  "dissent": [],
-  "findings": [],
+  "title": "留学信息服务平台 MVP — 港新英一年制硕士 AI 选校定位（V0.4 数据覆盖修订）",
+  "accountable_ai": "primary-ai",
+  "owner": "Product Owner (user)",
+  "stage": "P",
   "objectives": [
     {
       "id": "OBJ-001",
-      "statement": "交付本地可运行的「背景输入 → 三档选校清单（全引用溯源）」全流程"
+      "statement": "交付本地可运行的「背景输入 → 三档选校清单（全引用溯源）」全流程，三档各 ≥3 推荐"
     },
     {
       "id": "OBJ-002",
       "statement": "数据不足时正确拒绝，零编造推荐"
+    },
+    {
+      "id": "OBJ-003",
+      "statement": "V0.4：目标院校（港三+新二+英国 G5/王爱曼华）项目覆盖 ≥0.8，分档数据可得率 ≥0.95"
     }
   ],
-  "owner": "Product Owner (user)",
   "requirements": [
-    {"id": "REQ-001", "priority": "Must", "statement": "项目库 ≥60 个项目，关键字段完整率 ≥95%", "acceptance": "reports/data_quality.json 达标（THR-DATA-1）"},
-    {"id": "REQ-002", "priority": "Must", "statement": "案例库 ≥500 条，每条带来源", "acceptance": "reports/data_quality.json 达标（THR-DATA-2）"},
-    {"id": "REQ-003", "priority": "Must", "statement": "背景输入 → 三档梯度输出", "acceptance": "E2E 用例集通过率 100%（THR-E2E）"},
-    {"id": "REQ-004", "priority": "Must", "statement": "每条推荐 ≥1 可溯源引用", "acceptance": "引用覆盖率 100%（THR-CITE）"},
-    {"id": "REQ-005", "priority": "Must", "statement": "数据不足明确拒绝，零编造", "acceptance": "拒绝用例集通过率 100%（THR-REJECT）"},
-    {"id": "REQ-006", "priority": "Must", "statement": "本地 Web UI 完成 S-001 流程", "acceptance": "reports/manual_e2e.md 记录"},
-    {"id": "REQ-007", "priority": "Must", "statement": "采集幂等", "acceptance": "双跑行数增量 0（THR-IDEM）"},
-    {"id": "REQ-008", "priority": "Must", "statement": "匹配引擎零 LLM 调用", "acceptance": "静态审计（THR-NOLLM）"}
+    {"id": "REQ-001", "priority": "Must", "statement": "L1 项目库：目标院校集合（14 校）覆盖，项目 ≥60，关键字段完整率 ≥95%", "acceptance": "THR-COVERAGE ≥0.8 且 THR-DATA-1 ≥0.95（reports/data_quality.json）"},
+    {"id": "REQ-002", "priority": "Must", "statement": "L0 教育部认可名单库：港/新/英全覆盖，只存正面记录", "acceptance": "THR-DATA-0 = 1.0（reports/recognition_coverage.json）"},
+    {"id": "REQ-003", "priority": "Must", "statement": "选校梯度输出：常规背景三档各 ≥3，分档由冻结规则产生", "acceptance": "THR-E2E = 1.0（reports/e2e.json）；THR-EXPERT ≥0.70"},
+    {"id": "REQ-004", "priority": "Must", "statement": "引用强制：无 valid citation（URL+快照）的推荐丢弃并记录", "acceptance": "THR-CITE = 1.0（reports/citation_check.json）"},
+    {"id": "REQ-005", "priority": "Must", "statement": "数据不足明确拒绝，零编造推荐", "acceptance": "THR-REJECT = 1.0（reports/e2e.json）"},
+    {"id": "REQ-006", "priority": "Must", "statement": "本地 Web UI 完成认可查询 + 背景输入 + 梯度清单 + 引用跳转", "acceptance": "步骤化人工核验清单签字（reports/manual_e2e.md）"},
+    {"id": "REQ-007", "priority": "Must", "statement": "采集幂等：重复运行不产生重复记录", "acceptance": "THR-IDEM = 0（reports/idempotency.json）"},
+    {"id": "REQ-008", "priority": "Must", "statement": "匹配引擎零 LLM 调用", "acceptance": "THR-NOLLM = 0 命中（reports/audit.json）"},
+    {"id": "REQ-009", "priority": "Must", "statement": "LLM 客户端 OpenAI 兼容可配置，不绑定供应商", "acceptance": "THR-LLMCONF 双端点冒烟（reports/llm_smoke.json）"},
+    {"id": "REQ-010", "priority": "Should", "statement": "cloudflared 隧道公网验证访问", "acceptance": "外网完成 S-001（reports/tunnel_e2e.md）"},
+    {"id": "REQ-011", "priority": "Must", "statement": "分档数据可得性：每个入库项目具备官方可溯源分档依据", "acceptance": "THR-GPA ≥0.95（reports/data_quality.json）"}
   ],
-  "reviews": [],
+  "changes": [
+    {"id": "CHG-001", "path": "storage/", "requirement_ids": ["REQ-001", "REQ-007"], "description": "SQLite schema + 自然键 upsert + 状态机 + quarantine"},
+    {"id": "CHG-002", "path": "collectors/moe_recognition.py", "requirement_ids": ["REQ-002"], "description": "L0 教育部认可名单采集（港/新/英）"},
+    {"id": "CHG-003", "path": "matching/tier.py", "requirement_ids": ["REQ-003", "REQ-005", "REQ-008"], "description": "硬过滤 + margin 分档（纯规则）"},
+    {"id": "CHG-004", "path": "api/server.py", "requirement_ids": ["REQ-004", "REQ-006"], "description": "HTTP API + 引用强制（无有效出处丢弃并计数）"},
+    {"id": "CHG-005", "path": "pipeline/llm_client.py", "requirement_ids": ["REQ-009"], "description": "OpenAI 兼容可配置客户端 + fallback"},
+    {"id": "CHG-006", "path": "scripts/start_local.sh", "requirement_ids": ["REQ-010"], "description": "cloudflared 隧道公网验证"},
+    {"id": "CHG-007", "path": "collectors/", "requirement_ids": ["REQ-001", "REQ-011"], "description": "V0.4：港三+新二 + 英国目标校采集适配器扩展"},
+    {"id": "CHG-008", "path": "collectors/gpa_china.py", "requirement_ids": ["REQ-011"], "description": "V0.4：各校官方中国均分折算页采集 + data/tier_map.json"}
+  ],
+  "tests": [
+    {"id": "TST-001", "requirement_ids": ["REQ-001"], "status": "not_run", "independent_from_implementation": false, "evidence": "scripts/data_quality_report.py"},
+    {"id": "TST-002", "requirement_ids": ["REQ-002"], "status": "not_run", "independent_from_implementation": false, "evidence": "reports/recognition_coverage.json"},
+    {"id": "TST-003", "requirement_ids": ["REQ-003"], "status": "not_run", "independent_from_implementation": true, "evidence": "tests/fixtures/E-001..E-011 + reports/e2e.json"},
+    {"id": "TST-004", "requirement_ids": ["REQ-004"], "status": "passed", "independent_from_implementation": true, "evidence": "tests/test_req004_citation.py ALL PASS"},
+    {"id": "TST-005", "requirement_ids": ["REQ-005"], "status": "not_run", "independent_from_implementation": true, "evidence": "reports/e2e.json"},
+    {"id": "TST-006", "requirement_ids": ["REQ-006"], "status": "not_run", "independent_from_implementation": false, "evidence": "reports/manual_e2e.md"},
+    {"id": "TST-007", "requirement_ids": ["REQ-007"], "status": "passed", "independent_from_implementation": false, "evidence": "tests/test_ms101_storage.py + reports/idempotency.json"},
+    {"id": "TST-008", "requirement_ids": ["REQ-008"], "status": "passed", "independent_from_implementation": true, "evidence": "scripts/audit_nollm.py THR-NOLLM pass"},
+    {"id": "TST-009", "requirement_ids": ["REQ-009"], "status": "not_run", "independent_from_implementation": false, "evidence": "reports/llm_smoke.json"},
+    {"id": "TST-010", "requirement_ids": ["REQ-010"], "status": "not_run", "independent_from_implementation": false, "evidence": "reports/tunnel_e2e.md"},
+    {"id": "TST-011", "requirement_ids": ["REQ-003"], "status": "not_run", "independent_from_implementation": true, "evidence": "reports/expert_blind_review.md"},
+    {"id": "TST-012", "requirement_ids": ["REQ-001"], "status": "not_run", "independent_from_implementation": true, "evidence": "scripts/data_quality_report.py target_school_coverage"},
+    {"id": "TST-013", "requirement_ids": ["REQ-011"], "status": "not_run", "independent_from_implementation": true, "evidence": "scripts/data_quality_report.py tiering_data_availability"}
+  ],
+  "risks": [
+    {"id": "RSK-001", "statement": "官网反爬/结构变更导致采集中断", "mitigation": "种子 URL 人工维护 + 失败隔离 + 重试 + browser_fetch 兜底"},
+    {"id": "RSK-002", "statement": "港/新官网 JS 渲染或不可采，覆盖不达标", "mitigation": "gpa/采集适配器逐校；仍失败则该校出分母并记录，不臆造"},
+    {"id": "RSK-003", "statement": "LLM 抽取错误污染数据", "mitigation": "规则校验 quarantine + source_excerpts 字段级人工抽样门 ≥95%"},
+    {"id": "RSK-004", "statement": "推荐错误误导用户重大决策", "mitigation": "全链路引用溯源 + 显著免责 + 拒绝机制"},
+    {"id": "RSK-005", "statement": "抓取合规风险", "mitigation": "仅公开页面 + 限速 ≥1s + 遵守 robots + 非商业验证"},
+    {"id": "RSK-006", "statement": "英国校中国折算口径不一，2:1/2:2 无统一官方折算", "mitigation": "逐校适配器；无官方折算者不入「可推荐」并计入 THR-GPA 缺口"}
+  ],
+  "assumptions": [
+    {"id": "A-001", "statement": "港新英项目硬性要求（均分/list/语言）在官网公开可采", "evidence": "2026-10-07 证伪并修订：显式覆盖分母 + 分档数据可得率要求；见 reports/data_quality.json"},
+    {"id": "A-002", "statement": "港三/新二项目页公开可采（V0.4 待验证）", "evidence": "D 阶段验证任务，MS-109 首个采集验证"},
+    {"id": "A-003", "statement": "规则匹配 + 官方分档数据即可给出可用梯度", "evidence": "中介选校逻辑本质是硬约束过滤；案例纠偏移至 WP-002"},
+    {"id": "A-004", "statement": "本地 SQLite 足够 MVP", "evidence": "report-rag 同栈已验证"},
+    {"id": "A-005", "statement": "cloudflared 隧道满足验证期公网访问", "evidence": "验证期方案，不阻断本地交付"}
+  ],
+  "decisions": [
+    {"id": "DEC-001", "statement": "规则优先、LLM 仅用于抽取：匹配引擎零 LLM 调用", "alternatives": ["LLM 直接生成推荐"], "evidence": "幻觉责任风险；THR-NOLLM 静态审计约束"},
+    {"id": "DEC-002", "statement": "无引用不推荐：服务端丢弃无有效出处（URL+快照）的推荐", "alternatives": ["允许无引用推荐并标注"], "evidence": "信任层是产品核心差异（PRD 业务价值节）"},
+    {"id": "DEC-003", "statement": "本地 SQLite(WAL) 单机存储，无向量库（案例层随 WP-002）", "alternatives": ["PostgreSQL", "Qdrant 向量库"], "evidence": "MVP 单机规模；案例层移出后无需检索"},
+    {"id": "DEC-004", "statement": "V0.4：覆盖与分档数据可得性作为 Must 验收，不达标不得进入 C", "alternatives": ["先交付再补数据"], "evidence": "D 阶段自测证伪 A-001（可入档仅 36.98%）"}
+  ],
+  "reviews": [
+    {"id": "REV-WP001-R1", "reviewer": "local-independent-fresh-context", "independent": true, "context_isolated": true, "fresh_context": true, "note": "V0.3 R 阶段独立评审；V0.4 修订复评在 R 阶段进行"}
+  ],
+  "findings": [],
+  "dissent": [],
+  "approvals": [],
   "risk_assessment": {
     "critical_flags": [],
     "external_review_allowed": false,
@@ -88,32 +101,29 @@
     },
     "review_focus": ["architecture", "data", "ai-rag", "qa", "compliance"]
   },
-  "risks": [
-    {"id": "RSK-001", "statement": "官网反爬/结构变更导致采集中断", "mitigation": "种子 URL 人工维护 + 失败隔离不阻塞 + 重试"},
-    {"id": "RSK-002", "statement": "案例来源停止更新", "mitigation": "≥3 源冗余 + 本地快照"},
-    {"id": "RSK-003", "statement": "LLM 抽取错误污染数据", "mitigation": "规则校验 quarantine + 人工抽样门 ≥95%"},
-    {"id": "RSK-004", "statement": "推荐错误误导重大决策", "mitigation": "全链路引用 + 免责提示 + 拒绝机制"},
-    {"id": "RSK-005", "statement": "抓取合规风险", "mitigation": "仅公开页面 + 限速 ≥1s + 遵守 robots + 非商业使用"}
-  ],
   "rollback": {
-    "procedure": "MVP 无外部部署；回滚 = 删除本地项目目录与数据目录，无用户影响。",
-    "trigger": "C 门阻断缺陷无法修复或 A-001/A-002 证伪。"
+    "procedure": "MVP 无外部部署；回滚 = 保留上一版 catalog.sqlite3 快照与代码 commit，删除新增采集数据，无用户影响。",
+    "trigger": "C 门阻断缺陷无法修复，或 MS-109/110/111 采集大面积失败导致 THR-COVERAGE/THR-GPA 无法达标。"
   },
-  "skill_candidates": [],
-  "stage": "P",
+  "artifacts": [
+    {"path": "matching/tier.py"},
+    {"path": "api/server.py"},
+    {"path": "storage/db.py"},
+    {"path": "pipeline/llm_client.py"},
+    {"path": "tests/test_req004_citation.py"}
+  ],
   "task_contracts": [
     {
       "id": "TASK-001",
       "task_type": "user_visible_operation",
-      "authoritative_sources": ["programs 表", "cases 表"],
+      "authoritative_sources": ["programs 表", "recognized_schools 表"],
       "allowed_reasoning": "rule_based_matching_only",
       "expected_outcomes": ["tiered_recommendations_with_citations", "insufficient_data_notice"],
       "entrypoint_tests": ["POST /api/match"],
       "semantic_variants": ["背景字段组合变化"],
-      "presentation_contract": ["three_tiers", "citations_non_empty", "disclaimer_notice"],
+      "presentation_contract": ["user_summary", "three_tiers", "traceability", "citations_non_empty", "boundary", "disclaimer_notice"],
       "refusal_boundary": "数据不足或背景明显不匹配时必须输出 insufficient，不得生成推荐。"
     }
   ],
-  "tests": [],
-  "title": "留学信息服务平台 MVP — 港新英一年制硕士 AI 选校定位"
+  "skill_candidates": []
 }

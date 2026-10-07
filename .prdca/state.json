@@ -2,7 +2,7 @@
   "schema_version": "1.0",
   "work_packages": {
     "WP-001": {
-      "stage": "D",
+      "stage": "R",
       "history": [
         {
           "from": null,
@@ -135,6 +135,32 @@
             {
               "path": "/opt/coder/projects/study-abroad/.prdca/reports/arbitration.wp-001.json",
               "sha256": "0731b1bfe64deede0596a1b053f8bac37eb2234fcb4654b7a96bc41784d1b746",
+              "decision": "pass"
+            }
+          ]
+        },
+        {
+          "from": "D",
+          "to": "P",
+          "transition": "regression",
+          "at": "2026-10-07T03:43:14+00:00",
+          "evidence": [],
+          "reason": "D 阶段自测证伪 A-001：L1 可入档项目 71/192=36.98%（缺口 >30%），gpa_requirements 完整率 0.094（<0.95），港三/新二项目为 0，REQ-003 三档各≥3 不成立。按 A-001 证伪条件回 P 修订数据覆盖与质量方案。证据：reports/D-self-test.wp-001.md、reports/data_quality.json"
+        },
+        {
+          "from": "P",
+          "to": "R",
+          "transition": "forward",
+          "at": "2026-10-07T04:32:17+00:00",
+          "evidence": [
+            {
+              "path": "/opt/coder/projects/study-abroad/.prdca/reports/plan-check.wp-001.json",
+              "sha256": "eb770f4861ec89c77dc61f64840c00261a00052e8be62566e07f779d0e84e75e",
+              "decision": "pass"
+            },
+            {
+              "path": "/opt/coder/projects/study-abroad/.prdca/reports/decomposition-check.wp-001.json",
+              "sha256": "6745ff0780318091e46a24c4e57f8a5bb2e4153db623777761b244adaeec15f6",
               "decision": "pass"
             }
           ]

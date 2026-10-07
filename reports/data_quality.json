@@ -1,0 +1,103 @@
+{
+  "generated_at": "2026-10-07T11:41:52+08:00",
+  "db_path": "/opt/coder/projects/study-abroad/data/catalog.sqlite3",
+  "programs": {
+    "total": 195,
+    "real": 192,
+    "demo": 3,
+    "by_region": {
+      "uk": 192
+    },
+    "by_university": {
+      "伦敦大学学院": 53,
+      "南安普顿大学": 42,
+      "格拉斯哥大学": 37,
+      "帝国理工学院": 32,
+      "曼彻斯特大学": 22,
+      "伦敦国王学院": 6
+    }
+  },
+  "recognized_schools_by_region": {
+    "hk": 22,
+    "sg": 15,
+    "uk": 163
+  },
+  "field_completeness": {
+    "gpa_requirements": 0.0938,
+    "ielts_req": 0.9427,
+    "toefl_req": 0.2396,
+    "tuition_amount": 0.8906,
+    "deadlines": 0.8125,
+    "source_url": 1.0,
+    "snapshot_ref": 1.0,
+    "language_either": 0.9427
+  },
+  "citation_coverage": 1.0,
+  "matchable_programs": 71,
+  "matchable_ratio": 0.3698,
+  "e2e_cases": [
+    {
+      "case": "E-001",
+      "background": {
+        "undergrad_tier": "985",
+        "gpa": 88,
+        "ielts": 7.0,
+        "ielts_min_sub": 6.5,
+        "target_field": "cs",
+        "undergrad_school": "复旦大学"
+      },
+      "data_sufficiency": "ok",
+      "tiers": {
+        "reach": 0,
+        "match": 21,
+        "safety": 13
+      },
+      "dropped_no_citation": 0,
+      "each_tier_ge_3": false
+    },
+    {
+      "case": "E-002",
+      "background": {
+        "undergrad_tier": "shuangfei",
+        "gpa": 78,
+        "ielts": 6.0,
+        "ielts_min_sub": 5.5,
+        "target_field": "cs",
+        "undergrad_school": "某双非"
+      },
+      "data_sufficiency": "insufficient",
+      "tiers": {
+        "reach": 0,
+        "match": 0,
+        "safety": 0
+      },
+      "dropped_no_citation": 0,
+      "each_tier_ge_3": false
+    },
+    {
+      "case": "E-004",
+      "background": {
+        "undergrad_tier": "211",
+        "gpa": 85,
+        "ielts": 6.5,
+        "ielts_min_sub": 6.0,
+        "target_field": "business",
+        "undergrad_school": "上海大学"
+      },
+      "data_sufficiency": "ok",
+      "tiers": {
+        "reach": 0,
+        "match": 0,
+        "safety": 1
+      },
+      "dropped_no_citation": 0,
+      "each_tier_ge_3": false
+    }
+  ],
+  "threshold_eval": {
+    "THR-DATA-1_programs_ge_60": true,
+    "THR-DATA-1_field_completeness_ge_0_95": false,
+    "THR-CITE_citation_coverage_eq_1": true,
+    "REQ-003_each_tier_ge_3_all_cases": false
+  }
+}

@@ -29,15 +29,25 @@
       "role": "product_owner",
       "identity": "user-xu512",
       "decision": "approved"
+    },
+    {
+      "role": "tech_lead",
+      "identity": "primary-ai (kimi-k3)",
+      "decision": "approved"
+    },
+    {
+      "role": "qa_lead",
+      "identity": "local-independent-fresh-context",
+      "decision": "approved"
     }
   ],
-  "final_decision": "pending",
+  "final_decision": "approved",
   "return_to_p": true,
   "r_gate": {
-    "status": "pending",
-    "review_id": null,
-    "reviewed_change_id": null,
-    "decision_at": null
+    "status": "passed",
+    "review_id": "REV-CR001-R1",
+    "reviewed_change_id": "CR-001",
+    "decision_at": "2026-10-02T13:50:00Z"
   },
   "requested_at": "2026-10-02T12:00:00Z"
 }

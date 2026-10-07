@@ -1,0 +1,16 @@
+{
+  "generated_at": "2026-10-07T11:42:10+08:00",
+  "audited_dir": "matching/",
+  "patterns": [
+    "import_llm_client",
+    "llm_env_ref"
+  ],
+  "hits": [],
+  "imports": [
+    "__future__",
+    "json",
+    "pathlib"
+  ],
+  "disallowed_local_imports": [],
+  "THR-NOLLM_pass": true
+}

@@ -11,7 +11,8 @@
     "REQ-006",
     "REQ-007",
     "REQ-008",
-    "REQ-009"
+    "REQ-009",
+    "REQ-011"
   ],
   "nodes": [
     {
@@ -225,6 +226,128 @@
             "target": 1.0,
             "unit": "ratio",
             "measurement_method": "E2E 产出引用覆盖率断言"
+          }
+        ]
+      }
+    },
+    {
+      "id": "N-HK-SG",
+      "name": "V0.4 数据缺口修复：港三（HKU/CUHK/HKUST）+ 新二（NUS/NTU）项目采集适配器",
+      "parent": "N-ROOT",
+      "depends_on": [
+        "N-DATA"
+      ],
+      "requirement_ids": [
+        "REQ-001",
+        "REQ-011"
+      ],
+      "acceptance": {
+        "dominant": [
+          {
+            "item": "hk3-sg2-covered",
+            "description": "港三 + 新二各校均有 cs 或 business 方向项目入库（每校 ≥3 个）。"
+          },
+          {
+            "item": "official-lineage",
+            "description": "港/新项目每条含 source_url + snapshot_ref + source_excerpts，字段级可溯源。"
+          }
+        ],
+        "general": [
+          {
+            "item": "hk-sg-programs-per-school",
+            "comparator": ">=",
+            "target": 3,
+            "unit": "count",
+            "measurement_method": "按校统计 programs 行数（reports/data_quality.json）"
+          }
+        ]
+      }
+    },
+    {
+      "id": "N-UK-EXPAND",
+      "name": "V0.4 数据缺口修复：英国目标校补采（LSE/爱丁堡/华威/牛津/剑桥）",
+      "parent": "N-ROOT",
+      "depends_on": [
+        "N-DATA"
+      ],
+      "requirement_ids": [
+        "REQ-001"
+      ],
+      "acceptance": {
+        "dominant": [
+          {
+            "item": "uk-target-expanded",
+            "description": "英国目标校（G5 未覆盖校 + 王爱曼华）至少 4 所新增入库，每校 ≥3 项目。"
+          }
+        ]
+      }
+    },
+    {
+      "id": "N-GPA",
+      "name": "V0.4 数据质量修复：分档依据（gpa_requirements / 官方名单折算）补齐至 ≥95%",
+      "parent": "N-ROOT",
+      "depends_on": [
+        "N-COLLECT",
+        "N-HK-SG",
+        "N-UK-EXPAND"
+      ],
+      "requirement_ids": [
+        "REQ-011"
+      ],
+      "acceptance": {
+        "dominant": [
+          {
+            "item": "tiering-basis-present",
+            "description": "每个入库项目都有可用分档依据：gpa_requirements ≥1 个有效 tier，或 school_list_req=ucl_custom_list/allowed_tiers。"
+          },
+          {
+            "item": "official-source-for-mapping",
+            "description": "均分折算/名单依据均来自官方页面并附 source_excerpts，无推测。"
+          }
+        ],
+        "general": [
+          {
+            "item": "tiering-data-availability",
+            "comparator": ">=",
+            "target": 0.95,
+            "unit": "ratio",
+            "measurement_method": "scripts/data_quality_report.py 输出（THR-GPA）"
+          }
+        ]
+      }
+    },
+    {
+      "id": "N-DATA-E2E",
+      "name": "V0.4 数据覆盖与质量集成校验（端到端：覆盖→分档→三档清单）",
+      "parent": "N-ROOT",
+      "depends_on": [
+        "N-HK-SG",
+        "N-UK-EXPAND",
+        "N-GPA"
+      ],
+      "requirement_ids": [
+        "REQ-001",
+        "REQ-003",
+        "REQ-011"
+      ],
+      "acceptance": {
+        "dominant": [
+          {
+            "item": "coverage-met",
+            "description": "目标院校覆盖率 ≥0.8，且项目总数 ≥60。"
+          },
+          {
+            "item": "each-tier-ge-3",
+            "description": "预声明常规背景用例三档各 ≥3，分档与冻结规则手算一致。"
+          }
+        ],
+        "general": [
+          {
+            "item": "target-school-coverage",
+            "comparator": ">=",
+            "target": 0.8,
+            "unit": "ratio",
+            "measurement_method": "scripts/data_quality_report.py target_school_coverage（THR-COVERAGE）"
           }
         ]
       }

@@ -1,7 +1,8 @@
 {
   "declaration_id": "THR-WP-001",
   "work_package_id": "WP-001",
-  "declared_at": "2026-10-02T15:00:00Z",
+  "declared_at": "2026-10-07T12:00:00Z",
+  "revision": "V0.4（A-001 证伪后回 P 修订：新增覆盖/分档数据可得率阈值）",
   "thresholds": [
     {
       "id": "THR-DATA-0",
@@ -19,7 +20,25 @@
       "comparator": ">=",
       "target": 0.95,
       "unit": "ratio",
-      "measurement_method": "programs 表行数 ≥60，且关键字段（gpa_requirements/ielts_req 或 toefl_req/tuition_amount/deadlines/source_url/snapshot_ref）非空率 ≥0.95；脚本输出 reports/data_quality.json。"
+      "measurement_method": "programs 表行数 ≥60，且关键字段（gpa_requirements 或等效名单分档依据 / ielts_req 或 toefl_req / tuition_amount / deadlines / source_url / snapshot_ref）非空率 ≥0.95；脚本输出 reports/data_quality.json。"
+    },
+    {
+      "id": "THR-COVERAGE",
+      "name": "目标院校项目覆盖率（V0.4 新增，A-001 修复门）",
+      "metric": "target_school_coverage_ratio",
+      "comparator": ">=",
+      "target": 0.8,
+      "unit": "ratio",
+      "measurement_method": "目标院校集合 = 港三（HKU/CUHK/HKUST）+ 新二（NUS/NTU）+ 英国 G5（牛津/剑桥/帝国理工/UCL/LSE）+ 王爱曼华（KCL/爱丁堡/曼彻斯特/华威），共 14 校。某校计入覆盖当且仅当该校 cs 或 business 方向入库项目 ≥3 个。覆盖率 = 达标院校数 / 14 ≥ 0.8。脚本输出 reports/data_quality.json 的 target_school_coverage。"
+    },
+    {
+      "id": "THR-GPA",
+      "name": "分档数据可得率（V0.4 新增，REQ-003 修复门）",
+      "metric": "tiering_data_availability",
+      "comparator": ">=",
+      "target": 0.95,
+      "unit": "ratio",
+      "measurement_method": "programs 中具备可用分档依据的比例：gpa_requirements 至少含 1 个有效 tier，或 school_list_req 为 ucl_custom_list/含 allowed_tiers。脚本输出 reports/data_quality.json。"
     },
     {
       "id": "THR-EXTRACT",
@@ -37,7 +56,7 @@
       "comparator": ">=",
       "target": 1.0,
       "unit": "ratio",
-      "measurement_method": "冻结用例集 E-001~E-011 全部执行：正常用例输出三档合规清单且分档与「分档规则」逐步手算一致，拒绝用例输出 insufficient 且零推荐，E-011 认可查询与名单一致；成功数/总数 = 1.0；reports/e2e.json。"
+      "measurement_method": "冻结用例集 E-001~E-011 全部执行：正常用例输出三档合规清单且每档 ≥3，分档与「分档规则」逐步手算一致，拒绝用例输出 insufficient 且零推荐，E-011 认可查询与名单一致；成功数/总数 = 1.0；reports/e2e.json。"
     },
     {
       "id": "THR-EXPERT",
@@ -82,7 +101,7 @@
       "comparator": ">=",
       "target": 1.0,
       "unit": "ratio",
-      "measurement_method": "期望 60 个项目与 programs 表 + quarantine 表对账：每个种子项目必须有归属（入库或 quarantine 带原因码），无静默缺失；且单校 quarantine 率 ≤0.50。脚本输出 reports/seed_reconciliation.json，差异清单非空即失败。"
+      "measurement_method": "目标院校种子项目清单与 programs 表 + quarantine 表对账：每个种子项目必须有归属（入库或 quarantine 带原因码），无静默缺失；且单校 quarantine 率 ≤0.50。脚本输出 reports/seed_reconciliation.json，差异清单非空即失败。"
     },
     {
       "id": "THR-NOLLM",

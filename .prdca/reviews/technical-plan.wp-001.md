@@ -277,3 +277,48 @@ LLM_MODEL      # 如 deepseek-chat 或 qwen2.5:14b
 - [x] Operations impact considered
 - [x] Requirement-to-change mapping defined
 - [x] Independent review packet is bounded and reproducible
+
+## V0.4 数据覆盖与质量修复（A-001 证伪后回 P）
+
+### 触发与证据
+
+D 阶段自测（`reports/D-self-test.wp-001.md`、`reports/data_quality.json`）：192 个真实项目中可入档仅 71（36.98%）；`gpa_requirements` 完整率 0.094；港三/新二项目为 0；REQ-003 三档各 ≥3 不成立。PRD A-001 证伪，回 P。
+
+### 目标院校覆盖分母（冻结，14 校）
+
+港三 HKU/CUHK/HKUST ＋ 新二 NUS/NTU ＋ 英国 G5 牛津/剑桥/帝国理工/UCL/LSE ＋ 王爱曼华 KCL/爱丁堡/曼彻斯特/华威。某校计入覆盖当且仅当 cs 或 business 方向入库项目 ≥3。覆盖率 = 达标校数 / 14 ≥ 0.8（THR-COVERAGE）。格拉、南安等为扩展项，不计入分母。
+
+### 分档数据策略（REQ-011 / THR-GPA）
+
+分档依据来源分层，全部要求官方可溯源：
+
+1. **英国校**：抓取各校官方「中国申请者入学要求」国家页（China country page），提取 2:1 / 2:2 → 中国院校层次（985/211/双非等）均分折算；写入 `gpa_requirements` 或 `school_list_req`。UCL 沿用 `ucl_custom_list`（77 所自有名单）。
+2. **港/新校**：项目页通常写明「recognised bachelor's degree, min GPA x/4.0 或 x%」；抽取出对内地申请者的均分门槛；无明示分档者记录 `school_list_req` 或标注数据缺口。
+3. **院校层次定义**：`data/tier_map.json`（人工维护种子 + 采集扩充），无法判定 → `shuangfei` 并记待复核清单（沿用技术方案既有定义）。
+4. **抽取质量门**：折算/名单数值必须带 `source_excerpts` 原文片段；`validate_program` 扩展校验「有推荐价值但缺分档依据」的告警码（不阻断入库但计入 THR-GPA 分母）。
+
+### 采集器新增
+
+- `collectors/hk_programs.py`、`collectors/sg_programs.py`：港三 + 新二项目列表/详情适配器（复用 `uk_common` 的 fetch→extract→validate→upsert 管线）。
+- `collectors/uk_common.py`：扩展 `SCHOOLS` 增加 lse/edinburgh/warwick/oxford/cambridge 配置与 lister。
+- `collectors/gpa_china.py`：各校官方中国折算页采集与结构化（2:1/2:2 折算 + 名单）。
+
+### 新增阈值与追溯
+
+| Requirement | Planned Change | Predeclared Test | Evidence Artifact |
+|---|---|---|---|
+| REQ-001 覆盖 | CHG-007 HK/SG + UK 采集 | TST-012 覆盖率统计（THR-COVERAGE） | reports/data_quality.json |
+| REQ-011 分档可得 | CHG-008 gpa_china + tier_map | TST-013 可得率统计（THR-GPA） | reports/data_quality.json |
+| REQ-003 三档 | CHG-003 复用 | TST-003 E 用例集（每档 ≥3） | reports/e2e.json |
+
+### 里程碑（BASE-103）
+
+MS-109 港三+新二采集适配器（16h）→ MS-110 英国目标校补采（12h）→ MS-111 分档依据补齐（20h）；MS-112 data/tier_map.json（6h）；MS-113 覆盖/质量证据重跑 + E 用例集（10h）。
+
+### 新增风险
+
+| Risk | Fallback |
+|---|---|
+| 港/新官网 JS 渲染或反爬，采集不可行 | browser_fetch 渲染兜底；仍失败则该校出分母并在 PRD 记录；覆盖率目标按冻结规则调整需再次回 P |
+| 英国校中国折算页结构不一、无统一 2:1/2:2 折算 | 逐校适配器；无官方折算者该项目不入「可推荐」并计入 THR-GPA 缺口，不臆造 |
+| tier_map 判定争议 | 无法判定 → shuangfei + 待复核清单；争议校人工仲裁 |

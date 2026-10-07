@@ -1,8 +1,8 @@
 {
   "critical_flags": [],
   "external_review_allowed": false,
-  "reassessed_at": "2026-10-02T14:00:00Z",
-  "reassessment_reason": "CR-001 后重估：公网隧道暴露（验证期）+ L0 监管层加入 + 案例层移出",
+  "reassessed_at": "2026-10-07T12:00:00Z",
+  "reassessment_reason": "D 阶段自测证伪 A-001（可入档项目仅 36.98%，gpa_requirements 完整率 0.094，港三/新二为 0）后回 P 重估：数据源可行性/覆盖率成为关键风险，纳入本工作包修复；风险维度不变（L2）。",
   "dimensions": {
     "external_exposure": 2,
     "impact": 2,

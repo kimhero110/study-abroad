@@ -40,6 +40,14 @@
       "target": 0.95,
       "measurement_method": "从解析产出的项目库中随机抽样 30 个项目的硬性字段（均分要求/语言要求/学费/截止日期），与原始来源逐字段人工比对，统计一致比例。",
       "evidence_level": "user_task"
+    },
+    {
+      "id": "VAL-005",
+      "name": "目标院校项目覆盖率（V0.4）",
+      "baseline": 0.0,
+      "target": 0.8,
+      "measurement_method": "统计目标院校集合（港三+新二+英国 G5/王爱曼华，14 校）中 cs/business 方向入库项目 ≥3 的院校比例，脚本输出 reports/data_quality.json。",
+      "evidence_level": "component_test"
     }
   ],
   "active_work_packages": 2,

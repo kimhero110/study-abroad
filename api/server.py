@@ -105,12 +105,13 @@ def match(bg: dict) -> dict:
     for tier, progs in result["tiers"].items():
         out_tiers[tier] = []
         for p in progs:
+            # 引用强制（REQ-004）：无有效出处（URL + 快照）的推荐丢弃并记录
+            if not p.get("source_url") or not p.get("snapshot_ref"):
+                dropped += 1
+                continue
             citations = [{"type": "program_page", "url": p["source_url"],
                           "snapshot_ref": p["snapshot_ref"],
                           "excerpts": json.loads(p["source_excerpts"] or "{}")}]
-            if not citations:  # 引用强制（REQ-004）：空引用丢弃并记录
-                dropped += 1
-                continue
             out_tiers[tier].append({
                 "program_id": p["program_id"], "university": p["university"],
                 "program": p["name"], "recognized": bool(p.get("recognized")),

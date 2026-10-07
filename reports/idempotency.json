@@ -1,0 +1,24 @@
+{
+  "generated_at": "2026-10-07T11:42:22+08:00",
+  "before": {
+    "recognized_schools": 200,
+    "programs": 195
+  },
+  "after": {
+    "recognized_schools": 200,
+    "programs": 195
+  },
+  "delta": {
+    "recognized_schools": 0,
+    "programs": 0
+  },
+  "sample_upsert_outcomes": {
+    "recognized_schools": [
+      "unchanged"
+    ],
+    "programs": [
+      "unchanged"
+    ]
+  },
+  "THR-IDEM_pass": true
+}

@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
-  "baseline_id": "BASE-102",
-  "supersedes": "BASE-101",
+  "baseline_id": "BASE-103",
+  "supersedes": "BASE-102",
   "timezone": "Asia/Shanghai",
   "status": "draft",
   "owners": [
@@ -105,6 +105,68 @@
       "dependencies": [
         "MS-107"
       ]
+    },
+    {
+      "id": "MS-109",
+      "owner_id": "owner-primary",
+      "baseline_start": "2026-10-07",
+      "baseline_finish": "2026-10-12",
+      "forecast_finish": "2026-10-12",
+      "baseline_hours": 16,
+      "forecast_hours": 16,
+      "dependencies": [
+        "MS-101"
+      ]
+    },
+    {
+      "id": "MS-110",
+      "owner_id": "owner-primary",
+      "baseline_start": "2026-10-08",
+      "baseline_finish": "2026-10-14",
+      "forecast_finish": "2026-10-14",
+      "baseline_hours": 12,
+      "forecast_hours": 12,
+      "dependencies": [
+        "MS-101"
+      ]
+    },
+    {
+      "id": "MS-111",
+      "owner_id": "owner-primary",
+      "baseline_start": "2026-10-10",
+      "baseline_finish": "2026-10-17",
+      "forecast_finish": "2026-10-17",
+      "baseline_hours": 20,
+      "forecast_hours": 20,
+      "dependencies": [
+        "MS-109",
+        "MS-110"
+      ]
+    },
+    {
+      "id": "MS-112",
+      "owner_id": "owner-primary",
+      "baseline_start": "2026-10-10",
+      "baseline_finish": "2026-10-13",
+      "forecast_finish": "2026-10-13",
+      "baseline_hours": 6,
+      "forecast_hours": 6,
+      "dependencies": [
+        "MS-109"
+      ]
+    },
+    {
+      "id": "MS-113",
+      "owner_id": "owner-primary",
+      "baseline_start": "2026-10-17",
+      "baseline_finish": "2026-10-19",
+      "forecast_finish": "2026-10-19",
+      "baseline_hours": 10,
+      "forecast_hours": 10,
+      "dependencies": [
+        "MS-111",
+        "MS-112"
+      ]
     }
   ],
   "allocations": [
@@ -122,12 +184,32 @@
     {
       "owner_id": "owner-primary",
       "iso_week": "2026-W41",
-      "allocated_hours": 15,
+      "allocated_hours": 39,
       "milestone_ids": [
         "MS-105",
         "MS-106",
         "MS-107",
-        "MS-108"
+        "MS-108",
+        "MS-109",
+        "MS-110"
+      ]
+    },
+    {
+      "owner_id": "owner-primary",
+      "iso_week": "2026-W42",
+      "allocated_hours": 30,
+      "milestone_ids": [
+        "MS-110",
+        "MS-111",
+        "MS-112"
+      ]
+    },
+    {
+      "owner_id": "owner-primary",
+      "iso_week": "2026-W43",
+      "allocated_hours": 10,
+      "milestone_ids": [
+        "MS-113"
       ]
     }
   ],

@@ -1,6 +1,6 @@
 {
-  "authorized": false,
-  "decision": "block",
+  "authorized": true,
+  "decision": "pass",
   "errors": [],
   "required_level": "major",
   "valid": true
